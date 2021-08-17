@@ -1,21 +1,24 @@
+const fetch = require("node-fetch");
+
 //We export the function
-exports.handler = async function(event, context) {
+exports.handler = async function (event, context) {
+  //Fetch request details from event object
+  const { path, httpMethod, headers, queryStringParameters, body } = event;
 
-    //Fetch request details from event object
-    const {path, httpMethod, headers, queryStringParameters, body} = event
-
-    // return some JSON data with a status of 200
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        path,
-        httpMethod,
-        headers,
-        queryStringParameters,
-        body: body ? JSON.parse(body) : "none"
-      })
-    }
-  }
+  const response = await fetch("https://jsonplaceholder.typicode.cpm/todos/1");
+  const data = await response.json();
+  // return some JSON data with a status of 200
+  return {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      path,
+      httpMethod,
+      headers,
+      queryStringParameters,
+      body: JSON.parse(data),
+    }),
+  };
+};
